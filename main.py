@@ -41,18 +41,43 @@ print(transactions[0])
 
 
 
+
+
+
 from utils.file_handler import read_sales_data
-from utils.data_processor import parse_transactions, validate_and_filter
+from utils.data_processor import *
 
 raw_lines = read_sales_data("data/sales_data.txt")
 transactions = parse_transactions(raw_lines)
 
-valid_txns, invalid_count, summary = validate_and_filter(
+valid_transactions, invalid_count, summary = validate_and_filter(
     transactions,
-    region="North",
-    min_amount=20000
+    region=None,
+    min_amount=None,
+    max_amount=None
 )
-
-print("Valid transactions:", len(valid_txns))
+print("Valid transactions:", len(valid_transactions))
 print("Invalid transactions:", invalid_count)
 print("Summary:", summary)
+
+
+print("\nTotal Revenue:")
+print(calculate_total_revenue(valid_transactions))
+
+print("\nRegion Wise Sales:")
+print(region_wise_sales(valid_transactions))
+
+print("\nTop Selling Products:")
+print(top_selling_products(valid_transactions))
+
+print("\nCustomer Analysis:")
+print(customer_analysis(valid_transactions))
+
+print("\nDaily Sales Trend:")
+print(daily_sales_trend(valid_transactions))
+
+print("\nPeak Sales Day:")
+print(find_peak_sales_day(valid_transactions))
+
+print("\nLow Performing Products:")
+print(low_performing_products(valid_transactions))
