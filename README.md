@@ -121,13 +121,12 @@ West: 848902.0
 
 ## Assignment Status
 
-✔ All requirements implemented
-✔ Data cleaned and validated correctly
-✔ Revenue and region-wise analysis completed
-✔ Output report generated successfully
-✔ Ready for submission
+All requirements implemented
+Data cleaned and validated correctly
+Revenue and region-wise analysis completed
+Output report generated successfully
+Ready for submission
 
-```
 
 ---
 
@@ -139,5 +138,156 @@ West: 848902.0
 | Output | Correct |
 | README formatting | NOW correct |
 | Marks safety | 100% |
+
+
+
+## Question 2: Data File Handler & Preprocessing
+
+This project implements **Question 2** of the assignment, focusing on **file handling, data preprocessing, validation, and filtering** using Python.
+
+---
+
+## Project Structure
+
+```
+
+sales-analytics-system/
+│
+├── main.py
+├── README.md
+├── requirements.txt
+│
+├── utils/
+│   ├── file_handler.py
+│   └── data_processor.py
+│
+├── data/
+│   └── sales_data.txt
+│
+└── output/
+
+```
+
+---
+
+## Objectives of Q2
+
+- Read sales data from a text file with **encoding handling**
+- Parse pipe (`|`) delimited data
+- Clean messy data (commas, wrong formats)
+- Validate records using business rules
+- Filter records based on region and transaction amount
+- Generate summary statistics
+
+---
+
+## Implementation Details
+
+### Task 1.1: File Reading (`file_handler.py`)
+- Handles multiple encodings (`utf-8`, `latin-1`, `cp1252`)
+- Skips header row
+- Removes empty lines
+- Uses `with` statement
+- Handles `FileNotFoundError`
+
+### Task 1.2: Parsing & Cleaning (`data_processor.py`)
+- Splits records using `|`
+- Removes commas from numeric values
+- Converts:
+  - Quantity → `int`
+  - UnitPrice → `float`
+- Skips invalid records
+- Stores data as list of dictionaries
+
+### Task 1.3: Validation & Filtering (`data_processor.py`)
+- Validates:
+  - TransactionID starts with `T`
+  - ProductID starts with `P`
+  - CustomerID starts with `C`
+  - Quantity > 0
+  - UnitPrice > 0
+  - Region is not empty
+- Filters by:
+  - Region (optional)
+  - Minimum / Maximum transaction amount
+- Prints:
+  - Available regions
+  - Transaction amount range
+- Returns:
+  - Valid transactions
+  - Invalid record count
+  - Summary dictionary
+
+---
+
+## How to Run
+
+1. Activate virtual environment (if created)
+```bash
+venv\Scripts\activate
+````
+
+2. Run the program
+
+```bash
+python main.py
+```
+
+---
+
+## Sample Output
+
+```
+Available Regions: {'North', 'South', 'East', 'West'}
+Transaction Amount Range: 257.0 - 818960.0
+Valid transactions: 7
+Invalid transactions: 10
+Summary: {'total_input': 80, 'invalid': 10, 'final_count': 7}
+```
+
+---
+
+## Technologies Used
+
+* Python 3
+* File Handling
+* Data Structures (List, Dictionary)
+* Git & GitHub
+
+---
+
+## Status
+
+✔ Question 2 completed
+✔ Output verified
+✔ Code pushed to GitHub
+
+```
+
+---
+
+## STEP 3: SAVE THE FILE
+
+Press:
+```
+
+Ctrl + S
+
+````
+
+---
+
+## STEP 4: PUSH README TO GITHUB
+
+In terminal:
+
+```powershell
+git status
+git add README.md
+git commit -m "Added README for Q2"
+git push origin main
+````
+
+---
 
 
