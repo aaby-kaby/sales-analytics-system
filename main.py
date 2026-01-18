@@ -81,3 +81,21 @@ print(find_peak_sales_day(valid_transactions))
 
 print("\nLow Performing Products:")
 print(low_performing_products(valid_transactions))
+
+
+
+
+
+from utils.api_handler import (
+    fetch_all_products,
+    create_product_mapping,
+    enrich_sales_data,
+    save_enriched_data
+)
+
+# ---- Q4: API Integration ----
+api_products = fetch_all_products()
+product_mapping = create_product_mapping(api_products)
+
+enriched_transactions = enrich_sales_data(valid_transactions, product_mapping)
+save_enriched_data(enriched_transactions)
