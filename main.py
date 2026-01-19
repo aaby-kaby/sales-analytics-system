@@ -1,3 +1,4 @@
+
 from utils.file_handler import read_sales_file
 from utils.data_processor import clean_sales_data
 from utils.api_handler import fetch_product_category
@@ -99,3 +100,11 @@ product_mapping = create_product_mapping(api_products)
 
 enriched_transactions = enrich_sales_data(valid_transactions, product_mapping)
 save_enriched_data(enriched_transactions)
+
+
+from utils.report_generator import generate_sales_report
+
+generate_sales_report(
+    transactions=valid_transactions,
+    enriched_transactions=enriched_transactions
+)

@@ -1,14 +1,5 @@
 import requests
 
-def fetch_product_category(product_id):
-    try:
-        response = requests.get(f"https://dummyjson.com/products/{product_id[-1]}")
-        data = response.json()
-        return data.get("category", "Unknown")
-    except:
-        return "Unknown"
-    
-
 
 
 
@@ -64,7 +55,10 @@ def enrich_sales_data(transactions, product_mapping):
 
         try:
             # Extract numeric ID: P101 -> 101
-            product_id_num = int("".join(filter(str.isdigit, t["ProductID"])))
+            raw_id = int("".join(filter(str.isdigit, t["ProductID"])))
+            product_id_num = raw_id % 100
+            if product_id_num == 0:
+                product_id_num = 100
 
             if product_id_num in product_mapping:
                 api_data = product_mapping[product_id_num]

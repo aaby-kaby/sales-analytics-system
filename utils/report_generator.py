@@ -16,111 +16,120 @@ def generate_sales_report(transactions, enriched_transactions, output_file="outp
     Generates a comprehensive formatted text report
     """
 
-    total_revenue = calculate_total_revenue(transactions)
-    total_transactions = len(transactions)
-    avg_order_value = total_revenue / total_transactions if total_transactions else 0
-
-    dates = sorted(t["Date"] for t in transactions)
-    start_date = dates[0] if dates else "N/A"
-    end_date = dates[-1] if dates else "N/A"
-
-    region_data = region_wise_sales(transactions)
-    top_products = top_selling_products(transactions)
-    customers = customer_analysis(transactions)
-    daily_trend = daily_sales_trend(transactions)
-    peak_day = find_peak_sales_day(transactions)
-    low_products = low_performing_products(transactions)
-
-    enriched_count = sum(1 for t in enriched_transactions if t.get("API_Match"))
-    enrichment_rate = (enriched_count / len(enriched_transactions)) * 100 if enriched_transactions else 0
-    failed_products = [t["ProductName"] for t in enriched_transactions if not t.get("API_Match")]
-
     with open(output_file, "w", encoding="utf-8") as f:
 
-        # 1. HEADER
+        # ================= HEADER =================
         f.write("=" * 50 + "\n")
         f.write("SALES ANALYTICS REPORT\n")
         f.write(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        f.write(f"Records Processed: {total_transactions}\n")
+        f.write(f"Records Processed: {len(transactions)}\n")
         f.write("=" * 50 + "\n\n")
 
-        # 2. OVERALL SUMMARY
+        # ================= OVERALL SUMMARY =================
+        total_revenue = calculate_total_revenue(transactions)
+        avg_order_value = total_revenue / len(transactions) if transactions else 0
+
+        dates = sorted(t["Date"] for t in transactions)
+        date_range = f"{dates[0]} to {dates[-1]}" if dates else "N/A"
+
         f.write("OVERALL SUMMARY\n")
         f.write("-" * 50 + "\n")
         f.write(f"Total Revenue: ₹{total_revenue:,.2f}\n")
-        f.write(f"Total Transactions: {total_transactions}\n")
+        f.write(f"Total Transactions: {len(transactions)}\n")
         f.write(f"Average Order Value: ₹{avg_order_value:,.2f}\n")
-        f.write(f"Date Range: {start_date} to {end_date}\n\n")
+        f.write(f"Date Range: {date_range}\n\n")
 
-        # 3. REGION-WISE PERFORMANCE
+        # ================= REGION-WISE PERFORMANCE =================
+        region_stats = region_wise_sales(transactions)
+
         f.write("REGION-WISE PERFORMANCE\n")
         f.write("-" * 50 + "\n")
-        f.write(f"{'Region':<10}{'Sales':<15}{'% of Total':<15}{'Transactions'}\n")
+        f.write(f"{'Region':<10}{'Sales':>15}{'% of Total':>15}{'Transactions':>15}\n")
 
-        for region, data in region_data.items():
+        for region, data in region_stats.items():
             f.write(
-                f"{region:<10}₹{data['total_sales']:,.0f}<15"
-                f"{data['percentage']:.2f}%<15"
-                f"{data['transaction_count']}\n"
+                f"{region:<10}"
+                f"₹{data['total_sales']:>14,.2f}"
+                f"{data['percentage']:>14.2f}%"
+                f"{data['transaction_count']:>15}\n"
             )
         f.write("\n")
 
-        # 4. TOP 5 PRODUCTS
+        # ================= TOP 5 PRODUCTS =================
         f.write("TOP 5 PRODUCTS\n")
         f.write("-" * 50 + "\n")
-        f.write(f"{'Rank':<5}{'Product':<25}{'Qty':<10}{'Revenue'}\n")
+        f.write(f"{'Rank':<5}{'Product':<25}{'Qty Sold':>10}{'Revenue':>15}\n")
 
-        for i, (name, qty, revenue) in enumerate(top_products, 1):
-            f.write(f"{i:<5}{name:<25}{qty:<10}₹{revenue:,.2f}\n")
+        top_products = top_selling_products(transactions, n=5)
+        for i, (name, qty, revenue) in enumerate(top_products, start=1):
+            f.write(f"{i:<5}{name:<25}{qty:>10}{revenue:>15,.2f}\n")
         f.write("\n")
 
-        # 5. TOP 5 CUSTOMERS
+        # ================= TOP 5 CUSTOMERS =================
         f.write("TOP 5 CUSTOMERS\n")
         f.write("-" * 50 + "\n")
-        f.write(f"{'Rank':<5}{'Customer':<15}{'Spent':<15}{'Orders'}\n")
+        f.write(f"{'Rank':<5}{'Customer ID':<15}{'Total Spent':>15}{'Orders':>10}\n")
 
-        for i, (cid, data) in enumerate(list(customers.items())[:5], 1):
+        customers = customer_analysis(transactions)
+        top_customers = list(customers.items())[:5]
+
+        for i, (cid, data) in enumerate(top_customers, start=1):
             f.write(
-                f"{i:<5}{cid:<15}₹{data['total_spent']:,.2f}<15"
-                f"{data['purchase_count']}\n"
+                f"{i:<5}{cid:<15}"
+                f"{data['total_spent']:>15,.2f}"
+                f"{data['purchase_count']:>10}\n"
             )
         f.write("\n")
 
-        # 6. DAILY SALES TREND
+        # ================= DAILY SALES TREND =================
         f.write("DAILY SALES TREND\n")
         f.write("-" * 50 + "\n")
-        f.write(f"{'Date':<12}{'Revenue':<15}{'Txns':<10}{'Customers'}\n")
+        f.write(f"{'Date':<12}{'Revenue':>15}{'Txns':>10}{'Customers':>12}\n")
 
+        daily_trend = daily_sales_trend(transactions)
         for date, data in daily_trend.items():
             f.write(
-                f"{date:<12}₹{data['revenue']:,.2f}<15"
-                f"{data['transaction_count']:<10}"
-                f"{data['unique_customers']}\n"
+                f"{date:<12}"
+                f"{data['revenue']:>15,.2f}"
+                f"{data['transaction_count']:>10}"
+                f"{data['unique_customers']:>12}\n"
             )
         f.write("\n")
 
-        # 7. PRODUCT PERFORMANCE ANALYSIS
+        # ================= PRODUCT PERFORMANCE =================
+        best_day = find_peak_sales_day(transactions)
+        low_products = low_performing_products(transactions)
+
         f.write("PRODUCT PERFORMANCE ANALYSIS\n")
         f.write("-" * 50 + "\n")
-        f.write(f"Best Selling Day: {peak_day[0]} | Revenue: ₹{peak_day[1]:,.2f}\n\n")
+        f.write(f"Best Selling Day: {best_day[0]} | Revenue: ₹{best_day[1]:,.2f} | Transactions: {best_day[2]}\n\n")
 
+        f.write("Low Performing Products:\n")
         if low_products:
-            f.write("Low Performing Products:\n")
-            for p in low_products:
-                f.write(f"- {p[0]} (Qty: {p[1]}, Revenue: ₹{p[2]:,.2f})\n")
+            for name, qty, rev in low_products:
+                f.write(f"- {name}: Qty {qty}, Revenue ₹{rev:,.2f}\n")
         else:
-            f.write("No low performing products.\n")
+            f.write("None\n")
         f.write("\n")
 
-        # 8. API ENRICHMENT SUMMARY
+        # ================= API ENRICHMENT SUMMARY =================
+        total_enriched = sum(1 for t in enriched_transactions if t.get("API_Match"))
+        success_rate = (total_enriched / len(enriched_transactions)) * 100 if enriched_transactions else 0
+
         f.write("API ENRICHMENT SUMMARY\n")
         f.write("-" * 50 + "\n")
-        f.write(f"Total Products Enriched: {enriched_count}\n")
-        f.write(f"Success Rate: {enrichment_rate:.2f}%\n")
+        f.write(f"Total Products Enriched: {total_enriched}\n")
+        f.write(f"Success Rate: {success_rate:.2f}%\n")
+
+        failed_products = {
+            t["ProductName"] for t in enriched_transactions if not t.get("API_Match")
+        }
 
         if failed_products:
             f.write("Products Not Enriched:\n")
-            for p in set(failed_products):
+            for p in failed_products:
                 f.write(f"- {p}\n")
+        else:
+            f.write("All products enriched successfully\n")
 
-    print(f"Report generated successfully: {output_file}")
+    print(f"Sales report generated at {output_file}")
