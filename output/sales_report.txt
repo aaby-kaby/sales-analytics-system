@@ -1,6 +1,6 @@
 ==================================================
 SALES ANALYTICS REPORT
-Generated: 2026-01-19 15:52:01
+Generated: 2026-01-19 16:03:31
 Records Processed: 70
 ==================================================
 
@@ -83,21 +83,21 @@ API ENRICHMENT SUMMARY
 Total Products Enriched: 0
 Success Rate: 0.00%
 Products Not Enriched:
-- Laptop Charger65W
-- MonitorLED
-- KeyboardMechanical
-- Keyboard
-- Wireless Mouse
-- MouseWireless
-- Laptop Charger
-- WebcamHD
-- Laptop
 - USB Cable
-- Mouse
-- Headphones
+- Keyboard
+- MonitorLED
+- Laptop
 - External Hard Drive
+- MouseWireless
+- Headphones
+- Laptop Charger65W
 - External Hard Drive1TB
-- LaptopPremium
-- Monitor
+- WebcamHD
+- Laptop Charger
 - Webcam
+- KeyboardMechanical
+- Wireless Mouse
+- Monitor
+- LaptopPremium
+- Mouse
 - Wireless MouseGaming
