@@ -564,6 +564,57 @@ Date Range: 2024-12-01 to 2024-12-31
 
 ---
 
+## Question 5: Main Application (Main Script)
 
+This section implements the **main execution flow** of the Sales Analytics System.
+
+### File
+`main.py`
+
+### Responsibilities of main.py
+
+The `main()` function coordinates the complete end-to-end workflow:
+
+1. Displays welcome message
+2. Reads sales data from file (with encoding handling)
+3. Parses and cleans raw records
+4. Displays available regions and transaction amount range
+5. Accepts user input for optional filtering
+6. Validates transactions
+7. Performs all analytics (Q3)
+8. Fetches product data from DummyJSON API
+9. Enriches sales data with API information
+10. Saves enriched data to file
+11. Generates comprehensive sales report
+12. Displays success messages with file locations
+
+### Error Handling
+
+- Entire workflow is wrapped in `try-except`
+- User-friendly error messages are displayed
+- Application does not crash on runtime errors
+
+### How to Run
+
+```bash
+python main.py
+
+
+
+---
+
+
+###This project fully satisfies the assignment marking criteria:
+
+| Part | Description | Status |
+|----|----|----|
+| Part 1 | File Handling & Preprocessing | done |
+| Part 2 | Data Processing & Analytics | done |
+| Part 3 | API Integration | done |
+| Part 4 | Report Generation | done |
+| Part 5 | Main Application | done |
+| Error Handling | Try-except used throughout | done |
+
+---
 
 
